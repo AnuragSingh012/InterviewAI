@@ -8,49 +8,64 @@ const Navbar = () => {
   const location = useLocation();
 
   return (
-    <header className="w-full border-b">
-      <div className="max-w-7xl px-4 m-auto py-2 flex items-center justify-between">
+    <header className="w-full border-b bg-white shadow-sm">
+      <div className="max-w-7xl px-6 m-auto py-3 flex items-center justify-between">
         <Link to="/">
-          <div className="flex justify-center items-center gap-2">
-            <div className="w-8 h-8">
-              <img src={logo} alt="logo" />
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10">
+              <img
+                src={logo}
+                alt="logo"
+                className="w-full h-full object-contain"
+              />
             </div>
-            <h1 className="text-xl text-[#6c47ff] font-inter font-bold">
+            <h1 className="text-2xl text-[#6c47ff] font-inter font-bold">
               InterviewAI
             </h1>
           </div>
         </Link>
-        <div>
-          <ul className="flex items-center justify-center gap-8 font-inter">
-            <Link to="/dashboard">
-              <li
-                className={`text-sm font-bold cursor-pointer hover:text-gray-600 ${
-                  location.pathname == "/dashboard" && "text-gray-700"
+        <nav>
+          <ul className="flex items-center gap-8 font-inter">
+            <li>
+              <Link
+                to="/dashboard"
+                className={`text-sm font-semibold hover:text-gray-600 transition-colors ${
+                  location.pathname === "/dashboard"
+                    ? "text-gray-700"
+                    : "text-gray-500"
                 }`}
               >
                 Dashboard
-              </li>
-            </Link>
-            <Link to="/about-us">
-              <li className="text-sm font-bold cursor-pointer hover:text-gray-600">
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/about-us"
+                className="text-sm font-semibold text-gray-500 hover:text-gray-600 transition-colors"
+              >
                 About Us
-              </li>
-            </Link>
-            <Link to="/faq">
-              <li className="text-sm font-bold cursor-pointer hover:text-gray-600">
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/faq"
+                className="text-sm font-semibold text-gray-500 hover:text-gray-600 transition-colors"
+              >
                 FAQ
-              </li>
-            </Link>
+              </Link>
+            </li>
           </ul>
-        </div>
+        </nav>
         <div>
           <SignedIn>
-            <UserButton />
+            <UserButton className="flex items-center gap-2" />
           </SignedIn>
           <SignedOut>
-            <Button>
-              <Link to="/sign-in">Sign In</Link>
-            </Button>
+            <Link to="/sign-in">
+              <Button>
+                Sign In
+              </Button>
+            </Link>
           </SignedOut>
         </div>
       </div>

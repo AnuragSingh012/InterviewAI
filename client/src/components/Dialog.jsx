@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import spinner from "../assets/tube-spinner.svg";
 import { chatSession } from "@/api/GeminiApi";
+import axios from "axios";
 
 const Dialog = () => {
   const [jobRole, setJobRole] = useState("");
@@ -24,7 +25,7 @@ const Dialog = () => {
   const [questions, setQuestions] = useState([]);
   const [error, setError] = useState(null);
 
-  const { isSignedIn } = useAuth();
+  const { isSignedIn, userId } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -33,11 +34,14 @@ const Dialog = () => {
     setError(null);
 
     const skillsArray = skills.split(",").map((skill) => skill.trim());
+    const interviewFocusArray = interviewFocus
+      .split(",")
+      .map((focus) => focus.trim());
     const prompt = JSON.stringify({
       job_role: jobRole,
       skills: skillsArray,
       experience_level: parseInt(experience, 10),
-      interview_focus: interviewFocus,
+      interview_focus: interviewFocusArray,
       number_of_questions: parseInt(numberOfQuestions, 10),
       first_question: "Tell me about yourself",
       output_format: "JSON",
@@ -49,15 +53,36 @@ const Dialog = () => {
         "Please provide the questions in the specified JSON format.",
     });
 
+    console.log(prompt);
+
     try {
       const data = await chatSession.sendMessage(prompt);
-      const questionResponse = data.response.text();
+      const questionResponse = await data.response.text();
       const formattedResponse = questionResponse
         .replace("```json", "")
         .replace("```", "");
       const parsedResponse = JSON.parse(formattedResponse);
       setQuestions(parsedResponse);
       console.log(parsedResponse);
+
+      // Prepare questions in the required format for the database
+      const questionsFormatted = parsedResponse.map((q) => ({
+        questionText: q.question,
+      }));
+
+      // Save the generated questions to the backend
+      const response = await axios.post("/api/saveQuestion", {
+        jobRole,
+        skills: skillsArray,
+        experience_level: experience,
+        interviewFocus: interviewFocusArray,
+        numberOfQuestions,
+        questions: questionsFormatted,
+        createdBy: userId,
+      });
+
+      console.log(response.data.id);
+      navigate(`/interview/${response.data.id}`);
     } catch (err) {
       setError("Failed to generate questions. Please try again.");
     } finally {
@@ -80,9 +105,7 @@ const Dialog = () => {
               Get Started
             </Button>
           ) : (
-            <Button className="my-6">
-              Start Interview
-            </Button>
+            <Button className="my-6">Start Interview</Button>
           )}
         </DialogTrigger>
         <DialogContent>
