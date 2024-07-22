@@ -56,8 +56,8 @@ app.post("/api/saveQuestion", async (req, res) => {
       createdBy,
     });
 
-    const savedInterview = await newInterview.save();
-    res.status(201).json({ id: savedInterview._id });
+    await newInterview.save();
+    res.status(201).json({ message: "Saved Successfully" });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -90,14 +90,20 @@ app.post("/api/interview/:id/feedback", async (req, res) => {
   const feedbackData = req.body;
   const interviewId = req.params.id;
 
+  console.log(feedbackData);
+  console.log(interviewId);
+
   try {
     const newFeedback = new Feedback({
       interviewId,
       feedbacks: feedbackData,
     });
 
-    await newFeedback.save();
-    res.status(201).json({ message: "Feedback records inserted successfully" });
+    const savedFeedback = await newFeedback.save();
+    res.status(201).json({
+      id: savedFeedback._id,
+      message: "Feedback records inserted successfully",
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -21,7 +21,7 @@ const Dialog = () => {
   const [experience, setExperience] = useState("");
   const [interviewFocus, setInterviewFocus] = useState("");
   const [numberOfQuestions, setNumberOfQuestions] = useState("");
-  const [generating, setGenerating] = useState(false);
+  const [generating, setGenerating] = useState(true);
   const [questions, setQuestions] = useState([]);
   const [error, setError] = useState(null);
 

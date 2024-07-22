@@ -15,7 +15,6 @@ const Interview = () => {
     const fetchInterview = async () => {
       try {
         const response = await axios.get(`/api/interview/${id}`);
-        console.log(response.data);
         setInterviewData(response.data);
       } catch (err) {
         console.error(err);
@@ -31,41 +30,39 @@ const Interview = () => {
 
   return (
     <div className="overflow-hidden p-4">
-      <h1 className="text-2xl font-bold mb-4">Get Started</h1>
-      <p className="text-md text-red-500 mb-4">
-        {!enableWebcam &&
-          "Note: Please turn on your webcam before starting the interview"}
-      </p>
-      <div className="font-inter flex flex-col-reverse md:flex-row mt-6 md:mt-14 justify-between gap-4">
-        <div className="flex-1 flex flex-col">
-          <div className="flex flex-col gap-2">
+      <h1 className="text-3xl font-bold md:px-6 mt-4 mb-4">Get Started</h1>
+      <div className="font-inter flex flex-col-reverse md:flex-row mt-6 md:mt-14 justify-between gap-8">
+        <div className="flex-1 flex flex-col p-6 bg-white rounded-lg shadow-sm">
+          <div className="flex flex-col gap-4">
             <div className="flex gap-2 text-md">
-              <h2 className="font-semibold">Job Role:</h2>
-              <p>{interviewData.jobRole}</p>
+              <h2 className="font-semibold text-gray-700">Job Role:</h2>
+              <p className="text-gray-600">{interviewData.jobRole}</p>
             </div>
             <div className="flex gap-2 text-md">
-              <h2 className="font-semibold">Experience Level:</h2>
-              <p>{interviewData.experience_level}</p>
+              <h2 className="font-semibold text-gray-700">Experience Level:</h2>
+              <p className="text-gray-600">{interviewData.experience_level}</p>
             </div>
             <div className="flex gap-2 flex-wrap">
-              <h2 className="font-semibold">Skills:</h2>
-              {interviewData.skills?.map((skill, index) => (
-                <div key={index}>{`${skill}${
-                  index < interviewData.skills.length - 1 ? "," : ""
-                }`}</div>
-              ))}
+              <h2 className="font-semibold text-gray-700">Skills:</h2>
+              <p className="text-gray-600">
+                {interviewData.skills?.join(", ")}
+              </p>
             </div>
             <div className="flex gap-2 flex-wrap">
-              <h2 className="font-semibold">Interview Focus:</h2>
-              {interviewData.interviewFocus?.map((focus, index) => (
-                <div key={index}>{`${focus}${
-                  index < interviewData.interviewFocus.length - 1 ? "," : ""
-                }`}</div>
-              ))}
+              <h2 className="font-semibold text-gray-700">Interview Focus:</h2>
+              <p className="text-gray-600">
+                {interviewData.interviewFocus?.join(", ")}
+              </p>
             </div>
             <Link className="mt-6" to={`/interview/${id}/start`}>
-              <Button>Start Interview</Button>
+              <Button className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+                Start Interview
+              </Button>
             </Link>
+            <p className="text-md text-red-500 mb-4">
+              {!enableWebcam &&
+                "Note: Please turn on your webcam before starting the interview"}
+            </p>
           </div>
         </div>
         <div className="flex-1 flex flex-col w-full">
@@ -85,11 +82,11 @@ const Interview = () => {
               />
             )}
           </div>
-          <div className="flex gap-2 mt-2 justify-center">
+          <div className="flex gap-2 mt-4 justify-center">
             <Button
               onClick={handleVideo}
               variant="outline"
-              className="flex gap-2 px-1 pr-4 py-6 justify-center items-center rounded-full"
+              className="flex gap-2 px-1 py-6 justify-center items-center rounded-full bg-white shadow-sm hover:shadow-md transition"
             >
               <div className="w-10 h-10 rounded-full bg-slate-100 flex justify-center items-center">
                 <img
@@ -98,7 +95,7 @@ const Interview = () => {
                   alt="Video"
                 />
               </div>
-              {enableWebcam ? "ON" : "OFF"}
+              <div className="px-3">{enableWebcam ? "ON" : "OFF"}</div>
             </Button>
           </div>
         </div>

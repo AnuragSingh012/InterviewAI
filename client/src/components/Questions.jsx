@@ -3,14 +3,22 @@ import Webcam from "react-webcam";
 import SpeechToText from "../components/SpeechToText";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const Questions = () => {
-  const { id } = useParams();
   const navigate = useNavigate();
+  const { id } = useParams();
   const [questions, setQuestions] = useState([]);
   const [index, setIndex] = useState(0);
-  const [feedbackList, setFeedbackList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [qaList, setQaList] = useState([]);
+
+  useEffect(() => {
+    console.log("Inside FeedbackList");
+    console.log(qaList);
+  }, [qaList]);
 
   useEffect(() => {
     const fetchInterview = async () => {
@@ -29,26 +37,14 @@ const Questions = () => {
     if (questions.length > 0) {
       const speak = (text) => {
         const utterance = new SpeechSynthesisUtterance(text);
+        utterance.onstart = () => setLoading(true);
+        utterance.onend = () => setLoading(false);
         window.speechSynthesis.speak(utterance);
       };
 
       speak(questions[index]?.questionText);
     }
   }, [questions, index]);
-
-  const handleSaveFeedback = (feedback) => {
-    setFeedbackList((prevFeedbackList) => {
-      const updatedFeedbackList = [...prevFeedbackList];
-      updatedFeedbackList[index] = feedback;
-      return updatedFeedbackList;
-    });
-  };
-
-  const decreaseIndex = () => {
-    if (index > 0) {
-      setIndex((prevIndex) => prevIndex - 1);
-    }
-  };
 
   const increaseIndex = () => {
     if (index < questions.length - 1) {
@@ -57,31 +53,46 @@ const Questions = () => {
   };
 
   const handleEndInterview = async () => {
-    console.log(feedbackList);
     try {
-      await axios.post(`/api/interview/${id}/feedback`, { feedbackList });
+      await axios.post(`/api/interview/${id}/feedback`, qaList);
       navigate(`/interview/${id}/feedback`);
     } catch (err) {
-      console.error("Error saving feedback", err);
+      toast("Error while getting feedback");
     }
   };
 
   return (
     <div className="overflow-hidden p-4">
-      <div className="font-inter flex flex-col-reverse md:flex-row mt-6 md:mt-14 justify-between gap-4">
-        <div className="flex-1 flex flex-col p-6">
+      <div className="font-inter flex flex-col-reverse md:flex-row mt-6 md:mt-14 justify-between gap-6">
+        <div className="flex-1 flex flex-col p-6 bg-white rounded-lg shadow-sm">
           <div className="font-semibold text-sm text-blue-600 mb-4">
             Question {index + 1} out of {questions.length}
           </div>
-          <div className="mb-4 text-lg font-semibold">
+          <div className="mb-4 text-lg font-semibold text-gray-800">
             {questions[index]?.questionText || "Loading..."}
           </div>
           <div className="flex gap-2">
-            {index > 0 && <Button onClick={decreaseIndex}>Previous</Button>}
-            {index < questions.length - 1 ? (
-              <Button onClick={increaseIndex}>Next</Button>
+            {generating ? (
+              <h2>Generating Feedback ...</h2>
             ) : (
-              <Button onClick={handleEndInterview}>End Interview</Button>
+              <>
+                {index < questions.length - 1 ? (
+                  <Button
+                    disabled={loading}
+                    onClick={increaseIndex}
+                    className="transition-transform transform hover:scale-105"
+                  >
+                    Next
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handleEndInterview}
+                    className="transition-transform transform hover:scale-105"
+                  >
+                    End Interview
+                  </Button>
+                )}
+              </>
             )}
           </div>
         </div>
@@ -96,13 +107,15 @@ const Questions = () => {
               }}
             />
           </div>
-          <div className="flex gap-2 mt-2 justify-center">
-            <div className="flex justify-center items-center">
+          <div className="flex gap-2 mt-4 justify-center">
+            <div className="flex justify-center items-center bg-white p-4 rounded-lg shadow-sm">
               <SpeechToText
                 questions={questions}
                 index={index}
-                onSaveFeedback={handleSaveFeedback}
-                key={index} // Adding key to reset component state
+                key={index}
+                generating={generating}
+                setGenerating={setGenerating}
+                setQaList={setQaList}
               />
             </div>
           </div>
