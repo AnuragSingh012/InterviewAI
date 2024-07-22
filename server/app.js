@@ -13,9 +13,11 @@ app.use(
   })
 );
 
-app.get("/api/interview", async (req, res) => {
+app.get("/api/dashboard/:id", async (req, res) => {
+  const id = req.params.id;
+
   try {
-    const interviews = await Interview.find();
+    const interviews = await Interview.find({ createdBy: id });
     if (interviews) return res.status(200).json(interviews);
     return res.send("No Interviews found");
   } catch (error) {
@@ -56,8 +58,10 @@ app.post("/api/saveQuestion", async (req, res) => {
       createdBy,
     });
 
-    await newInterview.save();
-    res.status(201).json({ message: "Saved Successfully" });
+    const savedInterview = await newInterview.save();
+    res
+      .status(201)
+      .json({ id: savedInterview._id, message: "Saved Successfully" });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }

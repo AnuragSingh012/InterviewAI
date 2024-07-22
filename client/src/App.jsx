@@ -21,14 +21,15 @@ function App() {
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/sign-in" element={<SignInPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/interview/:id" element={<Interview />} />
           <Route path="/interview/:id/start" element={<Questions />} />
-          <Route
-            path="/interview/:id/feedback"
-            element={<InterviewFeedback />}
-          />
-          <Route element={<ProtectedRoute />}></Route>
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route
+              path="/interview/:id/feedback"
+              element={<InterviewFeedback />}
+            />
+          </Route>
         </Routes>
       </div>
     </>

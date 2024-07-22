@@ -25,7 +25,7 @@ const Navbar = () => {
           </div>
         </Link>
         <nav>
-          <ul className="flex items-center gap-8 font-inter">
+          <ul className="hidden md:flex items-center gap-8 font-inter">
             <li>
               <Link
                 to="/dashboard"

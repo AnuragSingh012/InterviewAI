@@ -21,7 +21,7 @@ const Dialog = () => {
   const [experience, setExperience] = useState("");
   const [interviewFocus, setInterviewFocus] = useState("");
   const [numberOfQuestions, setNumberOfQuestions] = useState("");
-  const [generating, setGenerating] = useState(true);
+  const [generating, setGenerating] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [error, setError] = useState(null);
 
@@ -81,7 +81,7 @@ const Dialog = () => {
         createdBy: userId,
       });
 
-      console.log(response.data.id);
+      console.log("now we have the id",response.data.id);
       navigate(`/interview/${response.data.id}`);
     } catch (err) {
       setError("Failed to generate questions. Please try again.");

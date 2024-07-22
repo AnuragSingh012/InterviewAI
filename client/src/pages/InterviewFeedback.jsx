@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import down from "../assets/down.png";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -7,25 +8,55 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { Button } from "@/components/ui/button";
+import spinner from "../assets/tube-spinner1.svg";
 
 const InterviewFeedback = () => {
   const { id } = useParams();
   const [feedbacks, setFeedBacks] = useState([]);
-  console.log(id);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchInterviewFeedback = async () => {
-      const response = await axios.get(`/api/interview/${id}/feedback`);
-      console.log("response=", response.data[0].feedbacks);
-      setFeedBacks(response.data[0].feedbacks);
+      setLoading(true);
+      try {
+        const response = await axios.get(`/api/interview/${id}/feedback`);
+        console.log("response=", response.data[0].feedbacks);
+        setFeedBacks(response.data[0].feedbacks);
+      } catch (error) {
+        console.error("Error fetching feedbacks:", error);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchInterviewFeedback();
   }, [id]);
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <img src={spinner} alt="Loading..." className="w-16 h-16" />
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 font-inter bg-gray-50 min-h-screen">
-      <div className="text-3xl font-bold text-[#6c5ce7] mb-8 mt-4">
-        Feedback
+      <div>
+        {feedbacks.length === 0 ? (
+          <div className="flex flex-col">
+            <h2 className="text-3xl font-bold text-[#6c5ce7] mb-8 mt-4">
+              No Feedback available
+            </h2>
+            <Link to={`/interview/${id}`}>
+              <Button variant="outline">Start Interview</Button>
+            </Link>
+          </div>
+        ) : (
+          <h2 className="text-3xl font-bold text-[#6c5ce7] mb-8 mt-4">
+            Feedback
+          </h2>
+        )}
       </div>
       <div className="space-y-6">
         {feedbacks.map((feedback, index) => (
