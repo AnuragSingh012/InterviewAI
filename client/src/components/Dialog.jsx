@@ -53,8 +53,6 @@ const Dialog = () => {
         "Please provide the questions in the specified JSON format.",
     });
 
-    console.log(prompt);
-
     try {
       const data = await chatSession.sendMessage(prompt);
       const questionResponse = await data.response.text();
@@ -63,7 +61,6 @@ const Dialog = () => {
         .replace("```", "");
       const parsedResponse = JSON.parse(formattedResponse);
       setQuestions(parsedResponse);
-      console.log(parsedResponse);
 
       // Prepare questions in the required format for the database
       const questionsFormatted = parsedResponse.map((q) => ({
@@ -81,7 +78,6 @@ const Dialog = () => {
         createdBy: userId,
       });
 
-      console.log("now we have the id",response.data.id);
       navigate(`/interview/${response.data.id}`);
     } catch (err) {
       setError("Failed to generate questions. Please try again.");
@@ -127,6 +123,7 @@ const Dialog = () => {
                     placeholder="e.g., Front-End Developer, Data Analyst"
                     value={jobRole}
                     onChange={(e) => setJobRole(e.target.value)}
+                    required
                   />
                 </div>
                 <div className="flex flex-col gap-1">
@@ -139,6 +136,7 @@ const Dialog = () => {
                     placeholder="e.g., JavaScript, Python, React, Node.js"
                     value={skills}
                     onChange={(e) => setSkills(e.target.value)}
+                    required
                   />
                 </div>
                 <div className="flex flex-col gap-1">
@@ -151,6 +149,9 @@ const Dialog = () => {
                     placeholder="e.g., 2, 5, 10"
                     value={experience}
                     onChange={(e) => setExperience(e.target.value)}
+                    required
+                    min="0"
+                    max="50"
                   />
                 </div>
                 <div className="flex flex-col gap-1">
@@ -163,6 +164,7 @@ const Dialog = () => {
                     placeholder="e.g., System Design, Behavioral Questions, General"
                     value={interviewFocus}
                     onChange={(e) => setInterviewFocus(e.target.value)}
+                    required
                   />
                 </div>
                 <div className="flex flex-col gap-1">
@@ -175,6 +177,9 @@ const Dialog = () => {
                     placeholder="e.g., 5, 10, 15"
                     value={numberOfQuestions}
                     onChange={(e) => setNumberOfQuestions(e.target.value)}
+                    required
+                    min="1"
+                    max="15"
                   />
                 </div>
                 {error && <div className="text-red-500 text-sm">{error}</div>}

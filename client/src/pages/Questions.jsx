@@ -11,14 +11,10 @@ const Questions = () => {
   const { id } = useParams();
   const [questions, setQuestions] = useState([]);
   const [index, setIndex] = useState(0);
-  const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [qaList, setQaList] = useState([]);
+  const [hasAnswered, setHasAnswered] = useState(false);
 
-  useEffect(() => {
-    console.log("Inside FeedbackList");
-    console.log(qaList);
-  }, [qaList]);
 
   useEffect(() => {
     const fetchInterview = async () => {
@@ -37,8 +33,6 @@ const Questions = () => {
     if (questions.length > 0) {
       const speak = (text) => {
         const utterance = new SpeechSynthesisUtterance(text);
-        utterance.onstart = () => setLoading(true);
-        utterance.onend = () => setLoading(false);
         window.speechSynthesis.speak(utterance);
       };
 
@@ -49,6 +43,7 @@ const Questions = () => {
   const increaseIndex = () => {
     if (index < questions.length - 1) {
       setIndex((prevIndex) => prevIndex + 1);
+      setHasAnswered(false);
     }
   };
 
@@ -78,14 +73,15 @@ const Questions = () => {
               <>
                 {index < questions.length - 1 ? (
                   <Button
-                    disabled={loading}
+                    disabled={!hasAnswered}
                     onClick={increaseIndex}
-                    className="transition-transform transform hover:scale-105"
+                    className="transition-transform w-full md:w-auto transform hover:scale-105"
                   >
                     Next
                   </Button>
                 ) : (
                   <Button
+                    disabled={!hasAnswered}
                     onClick={handleEndInterview}
                     className="transition-transform transform hover:scale-105"
                   >
@@ -116,6 +112,7 @@ const Questions = () => {
                 generating={generating}
                 setGenerating={setGenerating}
                 setQaList={setQaList}
+                setHasAnswered={setHasAnswered}
               />
             </div>
           </div>

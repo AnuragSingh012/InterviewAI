@@ -13,7 +13,6 @@ const Dashboard = () => {
     const fetchInterview = async () => {
       try {
         const response = await axios.get(`/api/dashboard/${userId}`);
-        console.log(response.data);
         setInterviewData(response.data);
       } catch (err) {
         console.error(err);

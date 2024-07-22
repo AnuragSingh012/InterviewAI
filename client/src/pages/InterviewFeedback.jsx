@@ -21,7 +21,6 @@ const InterviewFeedback = () => {
       setLoading(true);
       try {
         const response = await axios.get(`/api/interview/${id}/feedback`);
-        console.log("response=", response.data[0].feedbacks);
         setFeedBacks(response.data[0].feedbacks);
       } catch (error) {
         console.error("Error fetching feedbacks:", error);

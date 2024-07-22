@@ -6,7 +6,7 @@ import ProtectedRoute from "./pages/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import Interview from "./pages/Interview";
 import SignInPage from "./pages/SignIn";
-import Questions from "./components/Questions";
+import Questions from "./pages/Questions";
 import InterviewFeedback from "./pages/InterviewFeedback";
 import AboutUs from "./pages/AboutUs";
 import FAQ from "./pages/FAQ";

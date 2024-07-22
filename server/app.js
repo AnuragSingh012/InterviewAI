@@ -69,7 +69,6 @@ app.post("/api/saveQuestion", async (req, res) => {
 
 app.get("/api/interview/:id/feedback", async (req, res) => {
   const id = req.params.id;
-  console.log(id);
   if (!id) {
     return res.status(400).json({ error: "Invalid interview ID" });
   }
@@ -93,9 +92,6 @@ app.get("/api/interview/:id/feedback", async (req, res) => {
 app.post("/api/interview/:id/feedback", async (req, res) => {
   const feedbackData = req.body;
   const interviewId = req.params.id;
-
-  console.log(feedbackData);
-  console.log(interviewId);
 
   try {
     const newFeedback = new Feedback({

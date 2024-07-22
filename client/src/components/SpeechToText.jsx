@@ -12,6 +12,7 @@ export default function SpeechToText({
   generating,
   setGenerating,
   setQaList,
+  setHasAnswered,
 }) {
   const [userAnswer, setUserAnswer] = useState("");
 
@@ -50,8 +51,6 @@ export default function SpeechToText({
             .replace("```", "");
           const parsedFeedbackResponse = JSON.parse(formattedFeedbackResponse);
 
-          console.log("parsedfeedback=", parsedFeedbackResponse);
-
           const feedbackData = {
             questionText: questions[index].questionText,
             userAnswer: userAnswer,
@@ -73,9 +72,9 @@ export default function SpeechToText({
             }
           });
 
-          console.log("Feedback Data = ", feedbackData);
 
           toast("Answer Recorded Successfully!");
+          setHasAnswered(true);
         } catch (err) {
           toast("Error while sending Answer to the API");
         } finally {
