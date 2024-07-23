@@ -11,11 +11,14 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchInterview = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(`/api/dashboard/${userId}`);
         setInterviewData(response.data);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
 
