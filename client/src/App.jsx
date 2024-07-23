@@ -13,7 +13,7 @@ import FAQ from "./pages/FAQ";
 
 function App() {
   return (
-    <>
+    <div className="overflow-hidden">
       <Navbar />
       <div className="max-w-7xl m-auto ">
         <Routes>
