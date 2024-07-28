@@ -1,7 +1,7 @@
 {
   "rewrites": [
-    { "source": "/sign-in", "destination": "/index.html" },
-    { "source": "/sign-in/:path*", "destination": "/index.html" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/sign-in", "destination": "/sign-in" },
+    { "source": "/sign-in/:path*", "destination": "/sign-in" },
+    { "source": "/(.*)", "destination": "/" }
   ]
 }
