@@ -55,7 +55,7 @@ const Interview = () => {
               </p>
             </div>
             <Link className="mt-6" to={`/interview/${id}/start`}>
-              <Button className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+              <Button className="w-full py-3">
                 Start Interview
               </Button>
             </Link>
